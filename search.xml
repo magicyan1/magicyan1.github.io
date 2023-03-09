@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>什么是BFC，怎么触发</title>
+      <link href="/2023/03/09/CSS/BFC/"/>
+      <url>/2023/03/09/CSS/BFC/</url>
+      
+        <content type="html"><![CDATA[<div class="note warning simple"><p>什么是BFC？</p></div><div class="note default no-icon flat"><p>BFC，英文全称 <strong>block formatting context(块级格式化上下文)</strong></p><p>有时候我们在进行布局的时候会发生一些意想不到的情况，这时候就需要我们去触发BFC去解决下面这一些问题</p><ul><li>父元素高度塌陷</li><li>父元素不受子元素margin影响</li><li>外边距重叠</li><li>不受兄弟元素float影响</li></ul></div><h2 id="为什么触发BFC能够解决这些问题？"><a href="#为什么触发BFC能够解决这些问题？" class="headerlink" title="为什么触发BFC能够解决这些问题？"></a>为什么触发BFC能够解决这些问题？</h2><div class="note primary simple"><p>因为触发了BFC，它就会给我们这个元素给它进行独立渲染，开辟出一块控件，这样子一来，就不会影响到这个元素它外部元素的一些布局情况</p></div><h2 id="如何去触发BFC"><a href="#如何去触发BFC" class="headerlink" title="如何去触发BFC"></a>如何去触发BFC</h2><div class="note primary simple"><p>根元素(html),就是一块独立渲染的空间</p><ol><li>浮动元素(元素的float不是none)</li><li>绝对定位元素(元素的position为absolution或fixed)</li><li>display不为none</li><li>overflow不为visible的块元素</li><li>contain值为layout、context或paint的元素</li><li>多列容器(元素的column-count或column-width不为auto，包括column-count为1)</li></ol></div><div class="note success simple"><p>当然，触发BFC的方式很多，不过我们平常使用<mark class="hl-label green">第四种</mark> 方法，或者<mark class="hl-label green">第三种</mark> 方法比较多，影响比较小，<mark class="hl-label orange">不建议用float浮动</mark> ，因为用了float浮动会造成元素脱离标准文档流，导致高度塌陷。要解决float浮动的后遗症需要加入下面代码</p><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">//使用伪类清除高度塌陷问题</span><br><span class="line">元素<span class="selector-pseudo">::after</span>&#123;</span><br><span class="line">    context:<span class="string">&#x27;&#x27;</span>;</span><br><span class="line">    <span class="attribute">display</span>:block;</span><br><span class="line">    <span class="attribute">clear</span>:both</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>]]></content>
+      
+      
+      <categories>
+          
+          <category> 前端 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> CSS </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>防抖与节流</title>
       <link href="/2023/03/09/JavaScript/%E9%98%B2%E6%8A%96%E8%8A%82%E6%B5%81/"/>
       <url>/2023/03/09/JavaScript/%E9%98%B2%E6%8A%96%E8%8A%82%E6%B5%81/</url>
