@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search> 
+  
+  
+    
+    <entry>
+      <title>防抖与节流</title>
+      <link href="/2023/03/09/JavaScript/%E9%98%B2%E6%8A%96%E8%8A%82%E6%B5%81/"/>
+      <url>/2023/03/09/JavaScript/%E9%98%B2%E6%8A%96%E8%8A%82%E6%B5%81/</url>
+      
+        <content type="html"><![CDATA[<h1 id="前置"><a href="#前置" class="headerlink" title="前置"></a>前置</h1><div class="note warning simple"><p>在了解防抖和节流函数之前，首先我们要先了解什么是闭包，因为防抖节流函数都是在闭包的基础上进行的。</p></div><div class="note default no-icon flat"><p><strong>闭包是指有权访问另一个函数作用域中变量的函数</strong>，创建闭包的最常见的方式就是在一个函数内创建另一个函数，创建的函数可以访问到当前函数的局部变量。</p><p>闭包有两个常用的用途：</p><ul><li><p>创建私有变量</p></li><li><p>保留变量对象</p></li></ul><p><strong>缺点就是不会启动JS中的垃圾自动回收机制，会造成内存泄漏，需要手动清除</strong></p></div><h2 id="防抖"><a href="#防抖" class="headerlink" title="防抖"></a>防抖</h2><div class="note primary simple"><p>函数防抖是指在事件被触发n秒后再执行回调，如果在这n秒内事件又被触发，则重新计时。这可以使用在一些点击请求的事件上，避免因为用户的多次点击向后端发送多次请求</p></div><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">debounce</span>(<span class="params">fn,wait</span>)&#123;</span><br><span class="line">    <span class="keyword">let</span> timer = <span class="literal">null</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">        <span class="keyword">let</span> context = <span class="variable language_">this</span></span><br><span class="line">        <span class="keyword">let</span> args = <span class="variable language_">arguments</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment">//如果此时存在定时器的话，就取消之前的定时器重新计时</span></span><br><span class="line">        <span class="keyword">if</span>(timer)&#123;</span><br><span class="line">            <span class="built_in">clearTimeout</span>(timer);</span><br><span class="line">            timer = <span class="literal">null</span></span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">//设置定时器，使事件间隔指定事件后执行</span></span><br><span class="line">        timer = <span class="built_in">setTimeout</span>(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">            fn.<span class="title function_">apply</span>(context,args);</span><br><span class="line">        &#125;,wait)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h2 id="节流"><a href="#节流" class="headerlink" title="节流"></a>节流</h2><div class="note primary simple"><p>函数节流是指一个单位事件，在这个单位时间内，只能有一次触发事件的回调函数执行，如果在同一个单位时间内某事件被触发多次，只有一次能生效。节流可以使用在scroll函数等一些高频率触发的事件监听上，通过事件节流来降低事件调用的频率。</p></div><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">throttle</span>(<span class="params">fn,delay</span>)&#123;</span><br><span class="line">    <span class="keyword">let</span> curTime = <span class="title class_">Date</span>.<span class="title function_">now</span>()</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">        <span class="keyword">let</span> context = <span class="variable language_">this</span></span><br><span class="line">        <span class="keyword">let</span> args = <span class="variable language_">arguments</span></span><br><span class="line">        <span class="keyword">let</span> now <span class="title class_">Time</span> = <span class="title class_">Date</span>.<span class="title function_">now</span>()</span><br><span class="line">        </span><br><span class="line">        <span class="comment">//如果两次时间间隔超过了指定时间，则执行函数。</span></span><br><span class="line">        <span class="keyword">if</span>(nowTime - curTime &gt;= delay)&#123;</span><br><span class="line">            curTime = <span class="title class_">Date</span>.<span class="title function_">now</span>()</span><br><span class="line">            <span class="keyword">return</span> fn.<span class="title function_">apply</span>(context, args)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> 前端 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> JavaScript </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>我的第一篇博客</title>
+      <link href="/2023/03/07/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2/"/>
+      <url>/2023/03/07/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2/</url>
+      
+        <content type="html"><![CDATA[<h2 id="不知道要写些什么"><a href="#不知道要写些什么" class="headerlink" title="不知道要写些什么"></a>不知道要写些什么</h2><div class="note icon-padding flat"><i class="note-icon fab fa-cc-visa"></i><p>你是刷 Visa 还是 UnionPay</p></div><div class="note blue icon-padding flat"><i class="note-icon fas fa-bullhorn"></i><p>2021年快到了….</p></div><div class="note pink icon-padding flat"><i class="note-icon fas fa-car-crash"></i><p>小心开车 安全至上</p></div><div class="note red icon-padding flat"><i class="note-icon fas fa-fan"></i><p>这是三片呢？还是四片？</p></div><div class="note orange icon-padding flat"><i class="note-icon fas fa-battery-half"></i><p>你是刷 Visa 还是 UnionPay</p></div><div class="note purple icon-padding flat"><i class="note-icon far fa-hand-scissors"></i><p>剪刀石头布</p></div><div class="note green icon-padding flat"><i class="note-icon fab fa-internet-explorer"></i><p>前端最讨厌的浏览器</p></div><div class="note success simple"><p>最后来个十万个为什么</p></div><p>为什么鱼香肉丝没有鱼 <span class="hide-inline"><button type="button" class="hide-button" style="background-color: #FF7242;color: #fff">查看答案  </button><span class="hide-content">说得我的钱包就有钱一样</span></span></p><p>千万不要和风打架 <span class="hide-inline"><button type="button" class="hide-button" style="background-color: #FF7242;color: #fff">下一句  </button><span class="hide-content">就算你武功高，风没伤到你，你伤风了，也会感冒</span></span></p><h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;Hello World!&quot;</span>)</span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> 进阶 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> golang </tag>
+            
+            <tag> html </tag>
+            
+            <tag> CSS </tag>
+            
+            <tag> Vue </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+  
+  
+</search>
