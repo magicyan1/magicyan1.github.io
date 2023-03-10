@@ -4,13 +4,77 @@
   
     
     <entry>
-      <title></title>
-      <link href="/2023/03/09/Vue/%E4%BD%BF%E7%94%A8defer%E4%BC%98%E5%8C%96%E7%99%BD%E5%B1%8F%E6%97%B6%E9%97%B4/"/>
-      <url>/2023/03/09/Vue/%E4%BD%BF%E7%94%A8defer%E4%BC%98%E5%8C%96%E7%99%BD%E5%B1%8F%E6%97%B6%E9%97%B4/</url>
+      <title>Golang的变量声明-02</title>
+      <link href="/2023/03/10/Golang/02%E5%8F%98%E9%87%8F%E7%9A%84%E5%A3%B0%E6%98%8E/"/>
+      <url>/2023/03/10/Golang/02%E5%8F%98%E9%87%8F%E7%9A%84%E5%A3%B0%E6%98%8E/</url>
       
-        <content type="html"><![CDATA[]]></content>
+        <content type="html"><![CDATA[<div class="note info flat"><p>这一篇讲一下变量的声明</p></div><h2 id="变量的声明"><a href="#变量的声明" class="headerlink" title="变量的声明"></a>变量的声明</h2><div class="note primary flat"><p>声明变量的一般形式是使用 var 关键字</p></div><h2 id="变量声明的几种方式"><a href="#变量声明的几种方式" class="headerlink" title="变量声明的几种方式"></a>变量声明的几种方式</h2><figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;fmt&quot;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="comment">//第一种 使用默认值</span></span><br><span class="line">        <span class="keyword">var</span> a <span class="type">int</span></span><br><span class="line">        fmt.Printf(<span class="string">&quot;a = %d\n&quot;</span>, a)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="comment">//第二种</span></span><br><span class="line">        <span class="keyword">var</span> b <span class="type">int</span> = <span class="number">10</span></span><br><span class="line">        fmt.Printf(<span class="string">&quot;b = %d\n&quot;</span>, b)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="comment">//第三种 省略后面的数据类型,自动匹配类型</span></span><br><span class="line">        <span class="keyword">var</span> c = <span class="number">20</span></span><br><span class="line">        fmt.Printf(<span class="string">&quot;c = %d\n&quot;</span>, c)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="comment">//第四种 省略var关键字</span></span><br><span class="line">        d := <span class="number">3.14</span></span><br><span class="line">        fmt.Printf(<span class="string">&quot;d = %f\n&quot;</span>, d)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
       
       
+      <categories>
+          
+          <category> 后端 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Golang </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Golang开始之旅</title>
+      <link href="/2023/03/10/Golang/First_Golang/"/>
+      <url>/2023/03/10/Golang/First_Golang/</url>
+      
+        <content type="html"><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><div class="note info simple"><p>最近因为在学习 golang，所以在这里记录一下我的 golang 学习。<br>安装就不写了,golang 的安装很简单。分为以下两步:<br>1、找到安装包下载安装<br>2、配置环境变量</p></div><h2 id="First-Golang"><a href="#First-Golang" class="headerlink" title="First_Golang"></a>First_Golang</h2><div class="note primary flat"><p>第一篇关于 golang 的博客，当然是从”<strong>Hello World</strong>“开始了</p></div><h2 id="代码演示"><a href="#代码演示" class="headerlink" title="代码演示"></a>代码演示</h2><figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//package main定义了包名。你必须在源文件中非注释的第一行指明这个文件属于哪个包，如：package main。package main表示一个可独立执行的程序，每个 Go 应用程序都包含一个名为 main 的包。</span></span><br><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="comment">//import &quot;fmt&quot;告诉 Go 编译器这个程序需要使用 fmt 包（的函数，或其他元素），fmt 包实现了格式化 IO（输入/输出）的函数。</span></span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;fmt&quot;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">//func main()是程序开始执行的函数。main 函数是每一个可执行程序所必须包含的，一般来说都是在启动后第一个执行的函数（如果有 init() 函数则会先执行该函数）</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">fmt.Println(<span class="string">&quot;hello go!&quot;</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><div class="note info warning flat"><p><strong>注意：这里面 go 语言的语法，定义函数的时候，”{“ 必须和函数名在同一行，不能另起一行。</strong></p></div><h2 id="终端运行"><a href="#终端运行" class="headerlink" title="终端运行"></a>终端运行</h2><figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">go run 文件名.go</span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> 后端 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Golang </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>使用defer优化首屏白屏时间</title>
+      <link href="/2023/03/10/Vue/%E4%BD%BF%E7%94%A8defer%E4%BC%98%E5%8C%96%E7%99%BD%E5%B1%8F%E6%97%B6%E9%97%B4/"/>
+      <url>/2023/03/10/Vue/%E4%BD%BF%E7%94%A8defer%E4%BC%98%E5%8C%96%E7%99%BD%E5%B1%8F%E6%97%B6%E9%97%B4/</url>
+      
+        <content type="html"><![CDATA[<div class="note primary flat"><p>本次演示为 Vue3 语法，使用情况得分具体情况具体分析，下面来介绍一种情况导致首屏白屏时间过久的例子。超级好用</p></div><h2 id="知识点"><a href="#知识点" class="headerlink" title="知识点"></a>知识点</h2><div class="note info flat"><p>我们知道，Vue 框架是 spa(单页面)应用，<mark class="hl-label green">优点</mark> 很多，比如切换页面快、用户体验比较好、后期好维护<br>当然<mark class="hl-label red">缺点</mark> 也有，因为是单页面应用，所以不利于 SEO 优化(可以借助 SSR 来优化 SEO)，另一个重要的就是首屏加载时间长了。因为 SPA 是一开始就把所有的资源加载好，所以比起 MPA(多页面)，首屏的加载时间要更久。<br><strong>这时候如果首屏加载时间过久将会非常影响用户体验</strong></p></div><h2 id="Vue-代码"><a href="#Vue-代码" class="headerlink" title="Vue 代码"></a>Vue 代码</h2><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">setup</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript"><span class="keyword">import</span> <span class="title class_">HeavyCom</span> <span class="keyword">from</span> <span class="string">&#x27;./heavy.vue&#x27;</span></span></span><br><span class="line"><span class="language-javascript"><span class="keyword">import</span> &#123; useDefer &#125; <span class="keyword">from</span> <span class="string">&#x27;../utils/useDefer&#x27;</span></span></span><br><span class="line"><span class="language-javascript"><span class="keyword">const</span> defer = <span class="title function_">useDefer</span>()</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript"><span class="title function_">defineProps</span>(&#123;</span></span><br><span class="line"><span class="language-javascript">  <span class="attr">msg</span>: <span class="title class_">String</span>,</span></span><br><span class="line"><span class="language-javascript">&#125;)</span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">template</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;contain&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">v-for</span>=<span class="string">&quot;n, i in 100&quot;</span> <span class="attr">:key</span>=<span class="string">&quot;i&quot;</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">HeavyCom</span> <span class="attr">:i</span>=<span class="string">&quot;i&quot;</span> <span class="attr">v-if</span>=<span class="string">&quot;defer(n)&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">style</span> <span class="attr">scoped</span>&gt;</span><span class="language-css"></span></span><br><span class="line"><span class="language-css"><span class="selector-class">.contain</span> &#123;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">width</span>: <span class="number">100%</span>;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">display</span>: flex;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">flex-wrap</span>: wrap;</span></span><br><span class="line"><span class="language-css">&#125;</span></span><br><span class="line"><span class="language-css"></span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure><h2 id="JavaScript-代码"><a href="#JavaScript-代码" class="headerlink" title="JavaScript 代码"></a>JavaScript 代码</h2><figure class="highlight javascript"><figcaption><span>useDefer.js</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; ref &#125; <span class="keyword">from</span> <span class="string">&quot;vue&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">useDefer</span>(<span class="params">maxFrameCount = <span class="number">1000</span></span>) &#123;</span><br><span class="line">  <span class="comment">//渲染设置初始值</span></span><br><span class="line">  <span class="keyword">const</span> frameCount = <span class="title function_">ref</span>(<span class="number">0</span>);</span><br><span class="line">  <span class="keyword">const</span> <span class="title function_">refreshFrameCount</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">    <span class="comment">//渲染帧函数，跟随浏览器渲染</span></span><br><span class="line">    <span class="title function_">requestAnimationFrame</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">      frameCount.<span class="property">value</span>++;</span><br><span class="line">      <span class="keyword">if</span> (frameCount.<span class="property">value</span> &lt; maxFrameCount) &#123;</span><br><span class="line">        <span class="title function_">refreshFrameCount</span>();</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;;</span><br><span class="line">  <span class="title function_">refreshFrameCount</span>();</span><br><span class="line">  <span class="comment">//返回一个布尔值</span></span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">function</span> (<span class="params">showInFrameCount</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> frameCount.<span class="property">value</span> &gt;= showInFrameCount;</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h2 id="参考视频"><a href="#参考视频" class="headerlink" title="参考视频"></a>参考视频</h2><div class="note pink icon-padding flat"><i class="note-icon fas fa-fan"></i><p>相关链接: <a href="https://v.douyin.com/SmxBATa/">https://v.douyin.com/SmxBATa/</a></p></div>]]></content>
+      
+      
+      <categories>
+          
+          <category> 前端 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Vue </tag>
+            
+            <tag> 优化 </tag>
+            
+        </tags>
       
     </entry>
     
@@ -71,14 +135,8 @@
       <link href="/2023/03/07/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2/"/>
       <url>/2023/03/07/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2/</url>
       
-        <content type="html"><![CDATA[<h2 id="不知道要写些什么"><a href="#不知道要写些什么" class="headerlink" title="不知道要写些什么"></a>不知道要写些什么</h2><div class="note icon-padding flat"><i class="note-icon fab fa-cc-visa"></i><p>你是刷 Visa 还是 UnionPay</p></div><div class="note blue icon-padding flat"><i class="note-icon fas fa-bullhorn"></i><p>2021年快到了….</p></div><div class="note pink icon-padding flat"><i class="note-icon fas fa-car-crash"></i><p>小心开车 安全至上</p></div><div class="note red icon-padding flat"><i class="note-icon fas fa-fan"></i><p>这是三片呢？还是四片？</p></div><div class="note orange icon-padding flat"><i class="note-icon fas fa-battery-half"></i><p>你是刷 Visa 还是 UnionPay</p></div><div class="note purple icon-padding flat"><i class="note-icon far fa-hand-scissors"></i><p>剪刀石头布</p></div><div class="note green icon-padding flat"><i class="note-icon fab fa-internet-explorer"></i><p>前端最讨厌的浏览器</p></div><div class="note success simple"><p>最后来个十万个为什么</p></div><p>为什么鱼香肉丝没有鱼 <span class="hide-inline"><button type="button" class="hide-button" style="background-color: #FF7242;color: #fff">查看答案  </button><span class="hide-content">说得我的钱包就有钱一样</span></span></p><p>千万不要和风打架 <span class="hide-inline"><button type="button" class="hide-button" style="background-color: #FF7242;color: #fff">下一句  </button><span class="hide-content">就算你武功高，风没伤到你，你伤风了，也会感冒</span></span></p><h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;Hello World!&quot;</span>)</span><br></pre></td></tr></table></figure>]]></content>
+        <content type="html"><![CDATA[<h2 id="不知道要写些什么"><a href="#不知道要写些什么" class="headerlink" title="不知道要写些什么"></a>不知道要写些什么</h2><div class="note icon-padding flat"><i class="note-icon fab fa-cc-visa"></i><p>你是刷 Visa 还是 UnionPay</p></div><div class="note blue icon-padding flat"><i class="note-icon fas fa-bullhorn"></i><p>2021 年快到了….</p></div><div class="note pink icon-padding flat"><i class="note-icon fas fa-car-crash"></i><p>小心开车 安全至上</p></div><div class="note red icon-padding flat"><i class="note-icon fas fa-fan"></i><p>这是三片呢？还是四片？</p></div><div class="note orange icon-padding flat"><i class="note-icon fas fa-battery-half"></i><p>你是刷 Visa 还是 UnionPay</p></div><div class="note purple icon-padding flat"><i class="note-icon far fa-hand-scissors"></i><p>剪刀石头布</p></div><div class="note green icon-padding flat"><i class="note-icon fab fa-internet-explorer"></i><p>前端最讨厌的浏览器</p></div><div class="note success simple"><p>最后来个十万个为什么</p></div><p>为什么鱼香肉丝没有鱼 <span class="hide-inline"><button type="button" class="hide-button" style="background-color: #FF7242;color: #fff">查看答案  </button><span class="hide-content">说得我的钱包就有钱一样</span></span></p><p>千万不要和风打架 <span class="hide-inline"><button type="button" class="hide-button" style="background-color: #FF7242;color: #fff">下一句  </button><span class="hide-content">就算你武功高，风没伤到你，你伤风了，也会感冒</span></span></p><h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;Hello World!&quot;</span>);</span><br></pre></td></tr></table></figure>]]></content>
       
-      
-      <categories>
-          
-          <category> 进阶 </category>
-          
-      </categories>
       
       
         <tags>
