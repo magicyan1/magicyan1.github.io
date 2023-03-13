@@ -1,0 +1,340 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>Webpack优化手段 | magicyan的个人博客</title><meta name="author" content="magicyan,2314741287@qq.com"><meta name="copyright" content="magicyan"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="构建时间优化首先就是构建时间的优化了 (1) thread-loader多进程打包，可以大大提高构建的速度，使用方法是将 thread-loader 放在比较费时间的 loader 之前，比如 babel-loader 由于启动项目和打包项目都需要加速，所以配置在 webpack.base.js npm1npm i thread-loader -D  12345678&#x2F;&#x2F;webpack.base.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Webpack优化手段">
+<meta property="og:url" content="https://magicyan1.github.io/2023/03/12/Webpack/index.html">
+<meta property="og:site_name" content="magicyan的个人博客">
+<meta property="og:description" content="构建时间优化首先就是构建时间的优化了 (1) thread-loader多进程打包，可以大大提高构建的速度，使用方法是将 thread-loader 放在比较费时间的 loader 之前，比如 babel-loader 由于启动项目和打包项目都需要加速，所以配置在 webpack.base.js npm1npm i thread-loader -D  12345678&#x2F;&#x2F;webpack.base.">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://ts1.cn.mm.bing.net/th/id/R-C.ea0d0725b6a4f32742e2c1958d1ff79e?rik=vlYFBcUWQsZ9Ug&riu=http%3a%2f%2fimg.mm4000.com%2ffile%2f3%2f46%2f0a6b2b7a3b.jpg&ehk=78PwBnfUSRlFeONg5bpceJZZCq5lKCm9CZC%2fD%2bWYVyo%3d&risl=&pid=ImgRaw&r=0">
+<meta property="article:published_time" content="2023-03-12T14:23:22.000Z">
+<meta property="article:modified_time" content="2023-03-13T03:51:30.603Z">
+<meta property="article:author" content="magicyan">
+<meta property="article:tag" content="优化">
+<meta property="article:tag" content="Webpack">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://ts1.cn.mm.bing.net/th/id/R-C.ea0d0725b6a4f32742e2c1958d1ff79e?rik=vlYFBcUWQsZ9Ug&riu=http%3a%2f%2fimg.mm4000.com%2ffile%2f3%2f46%2f0a6b2b7a3b.jpg&ehk=78PwBnfUSRlFeONg5bpceJZZCq5lKCm9CZC%2fD%2bWYVyo%3d&risl=&pid=ImgRaw&r=0"><link rel="shortcut icon" href="https://img0.baidu.com/it/u=2045753317,3201031436&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500"><link rel="canonical" href="https://magicyan1.github.io/2023/03/12/Webpack/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Webpack优化手段',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-03-13 11:51:30'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/cursor.css"><meta name="generator" content="Hexo 6.3.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>const preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+
+  }
+}
+window.addEventListener('load',()=> { preloader.endLoading() })
+
+if (true) {
+  document.addEventListener('pjax:send', () => { preloader.initLoading() })
+  document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+}</script><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://img0.baidu.com/it/u=2045753317,3201031436&amp;fm=253&amp;fmt=auto&amp;app=138&amp;f=JPEG?w=500&amp;h=500" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">11</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">8</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">6</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 目录</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-link"></i><span> 链接</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-heart"></i><span> 友情链接</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-theater-masks"></i><span> 关于我</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/entertainment/"><i class="fa-fw fas fa-folder-open"></i><span> 娱乐</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://ts1.cn.mm.bing.net/th/id/R-C.ea0d0725b6a4f32742e2c1958d1ff79e?rik=vlYFBcUWQsZ9Ug&amp;riu=http%3a%2f%2fimg.mm4000.com%2ffile%2f3%2f46%2f0a6b2b7a3b.jpg&amp;ehk=78PwBnfUSRlFeONg5bpceJZZCq5lKCm9CZC%2fD%2bWYVyo%3d&amp;risl=&amp;pid=ImgRaw&amp;r=0')"><nav id="nav"><span id="blog-info"><a href="/" title="magicyan的个人博客"><img class="site-icon" src="https://img0.baidu.com/it/u=2045753317,3201031436&amp;fm=253&amp;fmt=auto&amp;app=138&amp;f=JPEG?w=500&amp;h=500"/><span class="site-name">magicyan的个人博客</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 目录</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-link"></i><span> 链接</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-heart"></i><span> 友情链接</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-theater-masks"></i><span> 关于我</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/entertainment/"><i class="fa-fw fas fa-folder-open"></i><span> 娱乐</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Webpack优化手段</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-03-12T14:23:22.000Z" title="发表于 2023-03-12 22:23:22">2023-03-12</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-03-13T03:51:30.603Z" title="更新于 2023-03-13 11:51:30">2023-03-13</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%89%8D%E7%AB%AF/Webpack/">Webpack</a></span></div><div class="meta-secondline"></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><div class="note primary flat"><div class="note info flat"><h1 id="构建时间优化"><a href="#构建时间优化" class="headerlink" title="构建时间优化"></a>构建时间优化</h1><p><strong>首先就是构建时间的优化了</strong></p>
+<h2 id="1-thread-loader"><a href="#1-thread-loader" class="headerlink" title="(1) thread-loader"></a>(1) thread-loader</h2><p>多进程打包，可以大大提高构建的速度，使用方法是将 thread-loader 放在比较费时间的 loader 之前，比如 babel-loader</p>
+<p>由于启动项目和打包项目都需要加速，所以配置在 webpack.base.js</p>
+<figure class="highlight javascript"><figcaption><span>npm</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm i thread-loader -D</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//webpack.base.js</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="attr">test</span>: <span class="regexp">/\.js$/</span>,</span><br><span class="line">    <span class="attr">use</span>: [</span><br><span class="line">        <span class="string">&#x27;thread-loader&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;babel-loader&#x27;</span></span><br><span class="line">    ],</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</div>
+<div class="note info flat"><h2 id="2-cache-loader"><a href="#2-cache-loader" class="headerlink" title="(2) cache-loader"></a>(2) cache-loader</h2><p>缓存资源，提高二次构建的速度，使用方法是将 cache-loader 放在比较费时间的 loader 之前，比如 babel-loader</p>
+<p>由于启动项目和打包项目都需要加速，所以配置在 webpack.base.js</p>
+<figure class="highlight javascript"><figcaption><span>npm</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm i cache-loader -D</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//webpack.base.js</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="attr">test</span>: <span class="regexp">/\.js$/</span>,</span><br><span class="line">    <span class="attr">use</span>: [</span><br><span class="line">        <span class="string">&#x27;cache-loader&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;thread-loader&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;babel-loader&#x27;</span></span><br><span class="line">    ],</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</div>
+
+<div class="note info flat"><h2 id="3-开启热更新"><a href="#3-开启热更新" class="headerlink" title="(3) 开启热更新"></a>(3) 开启热更新</h2><p>比如你修改了项目中某一个文件，会导致整个项目刷新，这非常耗时间。如果只刷新修改的这个模块，其他保持原状，那将大大提高修改代码的重新构建时间</p>
+<p>只用于开发中，所以配置在 webpack.dev.js</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//webpack.dev.js</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">//引入webpack</span></span><br><span class="line"><span class="keyword">const</span> webpack = <span class="built_in">require</span>(<span class="string">&#x27;webpack&#x27;</span>)</span><br><span class="line"><span class="comment">//使用webpack提供的热更新插件</span></span><br><span class="line">    <span class="attr">plugins</span>: [</span><br><span class="line">     <span class="keyword">new</span> webpack.<span class="title class_">HotModuleReplacementPlugin</span>()</span><br><span class="line">    ],</span><br><span class="line"></span><br><span class="line"><span class="comment">//最后在我们的devServer中配置</span></span><br><span class="line">    <span class="attr">devServer</span>: &#123;</span><br><span class="line">     <span class="attr">hot</span>: <span class="literal">true</span></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+</div>
+
+<div class="note info flat"><h2 id="4-exclude-amp-include"><a href="#4-exclude-amp-include" class="headerlink" title="(4) exclude &amp; include"></a>(4) exclude &amp; include</h2><p>exclude: 不需要处理的文件<br>include: 需要处理的文件<br>合理设置这两个属性，可以大大提高构建速度</p>
+<p>在 webpack.base.js 中配置</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//webpack.base.js</span></span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">    <span class="attr">test</span>: <span class="regexp">/\.js$/</span>,</span><br><span class="line">    <span class="comment">//使用include来指定编译文件夹</span></span><br><span class="line">    <span class="attr">include</span>: path.<span class="title function_">resolve</span>(__dirname, <span class="string">&#x27;../src&#x27;</span>)</span><br><span class="line">    <span class="comment">//使用exclude排除指定文件夹</span></span><br><span class="line">    <span class="attr">exclude</span>: <span class="regexp">/node_modules/</span>,</span><br><span class="line">    <span class="attr">use</span>: [</span><br><span class="line">        <span class="string">&#x27;balel-loader&#x27;</span></span><br><span class="line">    ],</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</div>
+
+<div class="note info flat"><h2 id="5-构建区分环境"><a href="#5-构建区分环境" class="headerlink" title="(5) 构建区分环境"></a>(5) 构建区分环境</h2><p>区分环境去构建是非常重要的，我们要明确知道，开发环境时我们需要哪些配置，不需要哪些配置；而最终打包生产环境时又需要哪些配置，不需要那些配置：</p>
+<ul>
+<li>开发环境：去除代码压缩、gzip、体积分析等优化的配置，大大提高构建速度</li>
+<li>生产环境：需要代码压缩、gzip、体积分析等优化的配置，大大降低最终项目打包体积</li>
+</ul>
+<p>在 webpack.base.js 中配置</p>
+</div>
+
+<div class="note info flat"><h2 id="6-提升-webpack-版本"><a href="#6-提升-webpack-版本" class="headerlink" title="(6) 提升 webpack 版本"></a>(6) 提升 webpack 版本</h2><p>webpack 版本越新，打包的效果肯定更好</p>
+</div>
+
+<div class="note success flat"><h1 id="打包体积优化"><a href="#打包体积优化" class="headerlink" title="打包体积优化"></a>打包体积优化</h1><p><strong>主要是打包后项目整体体积的优化，有利于项目上线后的页面加载速度提升</strong></p>
+<h2 id="1-CSS-代码压缩"><a href="#1-CSS-代码压缩" class="headerlink" title="(1) CSS 代码压缩"></a>(1) CSS 代码压缩</h2><p>CSS 代码压缩使用 css-minimizer-webpack-plugin，效果包括压缩、去重。<br>代码的压缩比较耗时间，所以只用在打包项目时，所以只需要在 webpack.prod.js 中配置</p>
+<figure class="highlight javascript"><figcaption><span>npm</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm i css-minimizer-webpack-plugin -D</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//webpack.prod.js</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title class_">CssMinimizerPlugin</span> = <span class="built_in">require</span>(<span class="string">&#x27;css-minimizer&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="attr">optimization</span>: &#123;</span><br><span class="line">        <span class="attr">minimizer</span>: [</span><br><span class="line">            <span class="keyword">new</span> <span class="title class_">CssMinimizerPlugin</span>() <span class="comment">//去重压缩CSS</span></span><br><span class="line">        ]</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+</div>
+
+<div class="note success flat"><h2 id="2-JS-代码压缩"><a href="#2-JS-代码压缩" class="headerlink" title="(2) JS 代码压缩"></a>(2) JS 代码压缩</h2><p>JS 代码压缩使用 terser-webpack-plugin，实现打包后 JS 代码的压缩<br>代码的压缩比较耗时间，所以只用在打包项目时，所以只需要在 webpack.prod.js 中配置</p>
+<figure class="highlight javascript"><figcaption><span>npm</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm i terser-webpack-plugin -D</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//webpack.prod.js</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title class_">TerserPlugin</span> = <span class="built_in">require</span>(<span class="string">&#x27;terser-webpack-plugin&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="attr">optimization</span>: &#123;</span><br><span class="line">        <span class="attr">minimizer</span>: [</span><br><span class="line">            <span class="keyword">new</span> <span class="title class_">CssMinimizerPlugin</span>(), <span class="comment">//去重压缩CSS</span></span><br><span class="line">            <span class="keyword">new</span> <span class="title class_">TerserPlugin</span>(&#123;</span><br><span class="line">                <span class="attr">terserOptions</span>: &#123;</span><br><span class="line">                    <span class="attr">compress</span>: &#123;</span><br><span class="line">                        <span class="attr">drop_console</span>: <span class="literal">true</span>, <span class="comment">//去除console</span></span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;), <span class="comment">// 压缩JavaScript</span></span><br><span class="line">        ]</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+</div>
+
+<div class="note success flat"><h2 id="3-tree-shaking"><a href="#3-tree-shaking" class="headerlink" title="(3) tree-shaking"></a>(3) tree-shaking</h2><p>tree-shaking 简单来说作用就是：只打包用到的代码，没用到的代码不打包，而 webpack5 默认开启 tree-shaking，当打包的 mode 为 production 时，自动开启 tree-shaking 进行优化</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//webpack.dev.js</span></span><br><span class="line"></span><br><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = &#123;</span><br><span class="line">    <span class="attr">mode</span>: <span class="string">&#x27;production&#x27;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</div>
+
+<div class="note success flat"><h2 id="4-source-map-类型"><a href="#4-source-map-类型" class="headerlink" title="(4) source-map 类型"></a>(4) source-map 类型</h2><p>source-map 的作用是：方便你报错的时候能定位到错误代码的位置。它的体积不容小觑，所以对于不同环境设置不同的类型是很有必要的</p>
+<ul>
+<li><strong>开发环境</strong><br>开发环境的时候我们需要能精准定位错误代码的位置</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//webpack.dev.js</span></span><br><span class="line"></span><br><span class="line">   <span class="variable language_">module</span>.<span class="property">exports</span> = &#123;</span><br><span class="line">       <span class="attr">mode</span>: <span class="string">&#x27;development&#x27;</span>,</span><br><span class="line">       <span class="attr">devtool</span>: <span class="string">&#x27;eval-cheap-module-source-map&#x27;</span></span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>生产环境</strong><br>生产环境的时候，我们想开启 source-map，但是又不想体积太大，那么可以换一种类型</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//webpack.dev.js</span></span><br><span class="line"></span><br><span class="line">   <span class="variable language_">module</span>.<span class="property">exports</span> = &#123;</span><br><span class="line">       <span class="attr">mode</span>: <span class="string">&#x27;development&#x27;</span>,</span><br><span class="line">       <span class="attr">devtool</span>: <span class="string">&#x27;nosources-source-map&#x27;</span></span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+</div>
+
+<div class="note success flat"><h2 id="5-打包体积分析"><a href="#5-打包体积分析" class="headerlink" title="(5) 打包体积分析"></a>(5) 打包体积分析</h2><p>使用 webpack-bundle-analyzer 可以审查打包后的体积分布，进而进行相应的体积优化<br>只需要打包时看体积，所以只需在 webpack.prod.js 中配置</p>
+<figure class="highlight javascript"><figcaption><span>npm</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm i webpack-bundle-analyzer -D</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//webpack.dev.js</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> &#123; <span class="title class_">BundleAnalyzerPlugin</span> &#125; = requireol(<span class="string">&#x27;webpack-bundle-analyzer&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="attr">plugins</span>: [</span><br><span class="line">    <span class="keyword">new</span> <span class="title class_">BundleAnalyzerPlugin</span>(),</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+</div>
+
+<div class="note danger flat"><h1 id="用户体验优化"><a href="#用户体验优化" class="headerlink" title="用户体验优化"></a>用户体验优化</h1><h2 id="1-模块懒加载"><a href="#1-模块懒加载" class="headerlink" title="(1) 模块懒加载"></a>(1) 模块懒加载</h2><p>如果不进行懒加载的话，最后整个项目代码都会被打包到一个 js 文件里，单个 js 文件体积非常大，那么当用户网页请求的时候，首屏加载时间会比较长，使用模块懒加载之后，大 js 文件会分成多个小 js 文件，网页加载时会按需加载，大大提升首屏加载速度</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//src/router/index.js</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> router = [</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="attr">path</span>: <span class="string">&#x27;/login&#x27;</span>,</span><br><span class="line">        <span class="attr">name</span>: <span class="string">&#x27;login&#x27;</span>,</span><br><span class="line">        <span class="attr">component</span>: login</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="attr">path</span>: <span class="string">&#x27;/login&#x27;</span>,</span><br><span class="line">        <span class="attr">name</span>: <span class="string">&#x27;login&#x27;</span>,</span><br><span class="line">        <span class="comment">//懒加载</span></span><br><span class="line">        <span class="attr">component</span>: <span class="function">() =&gt;</span> <span class="keyword">import</span>(<span class="string">&#x27;../views/home/home&#x27;</span>)</span><br><span class="line">    &#125;,</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+</div>
+
+<div class="note danger flat"><h2 id="2-Gzip"><a href="#2-Gzip" class="headerlink" title="(2) Gzip"></a>(2) Gzip</h2><p>开启 Gzip 后，大大提高用户的页面加载速度，因为 gzip 的体积比原文件小很多，当然需要后端的配合，使用 compression-webpack-plugin 只需要打包时优化体积，所以只需在 webpack.prod.js 中配置</p>
+<figure class="highlight javascript"><figcaption><span>npm</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm i compression-webpack-plugin -D</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//webpack.prod.js</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title class_">CompressionPlugin</span> = requireol(<span class="string">&#x27;compression-webpack-plugin&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="attr">plugins</span>: [</span><br><span class="line">    <span class="comment">//之前的代码</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">//gzip</span></span><br><span class="line">    <span class="keyword">new</span> <span class="title class_">CompressionPlugin</span>(&#123;</span><br><span class="line">        <span class="attr">algorithm</span>: <span class="string">&#x27;gzip&#x27;</span>,</span><br><span class="line">        <span class="attr">threshold</span>: <span class="number">10240</span>,</span><br><span class="line">        <span class="attr">minRatio</span>: <span class="number">0.8</span></span><br><span class="line">    &#125;),</span><br><span class="line">]</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+</div>
+
+<div class="note danger flat"><h2 id="3-小图片转-base64"><a href="#3-小图片转-base64" class="headerlink" title="(3) 小图片转 base64"></a>(3) 小图片转 base64</h2><p>对于一些小图片，可以转 base64，这样可以减少用户的 http 网络请求次数，提高用户的体验。webpack5 中 url-loader 已被废弃，改用 asset-module<br>在 webpack.base.js 中配置</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//webpack.base.js</span></span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">    <span class="attr">test</span>: <span class="regexp">/\.(png|jpe?g|gif|svg|webg)$/</span>,</span><br><span class="line">    <span class="attr">type</span>: <span class="string">&#x27;asset&#x27;</span>,</span><br><span class="line">    <span class="attr">perser</span>: &#123;</span><br><span class="line">        <span class="comment">//转base64的条件</span></span><br><span class="line">        <span class="attr">dataUrlCondition</span>: &#123;</span><br><span class="line">            <span class="attr">maxSize</span>: <span class="number">25</span> * <span class="number">1024</span>, <span class="comment">//25kb</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">generator</span>: &#123;</span><br><span class="line">        <span class="comment">//打包到 image 文件下</span></span><br><span class="line">        <span class="attr">filename</span>: <span class="string">&#x27;images/[contenthash][ext][query]&#x27;</span>,</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+</div>
+
+<div class="note danger flat"><h2 id="4-合理配置-hash"><a href="#4-合理配置-hash" class="headerlink" title="(4) 合理配置 hash"></a>(4) 合理配置 hash</h2><p>我们要保证，改过的文件需要更新 hash 值，而没改过的文件依然保持原本的 hash 值，这样才能保证在上线后，浏览器访问时没有改变的文件会命中缓存，从而达到性能优化的目的<br>在 webpack.base.js 中配置</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//webpack.base.js</span></span><br><span class="line"></span><br><span class="line"><span class="attr">output</span>: &#123;</span><br><span class="line">    <span class="attr">path</span>: path.<span class="title function_">resolve</span>(__dirname, <span class="string">&#x27;../dist&#x27;</span>),</span><br><span class="line">    <span class="comment">//给js文件加上contenthash</span></span><br><span class="line">    <span class="attr">filename</span>: <span class="string">&#x27;js/chunk-[contenthash].js&#x27;</span>,</span><br><span class="line">    <span class="attr">clean</span>: <span class="literal">true</span>,</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+</div>
+</div>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://magicyan1.github.io">magicyan</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://magicyan1.github.io/2023/03/12/Webpack/">https://magicyan1.github.io/2023/03/12/Webpack/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://magicyan1.github.io" target="_blank">magicyan的个人博客</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E4%BC%98%E5%8C%96/">优化</a><a class="post-meta__tags" href="/tags/Webpack/">Webpack</a></div><div class="post_share"><div class="social-share" data-image="https://ts1.cn.mm.bing.net/th/id/R-C.ea0d0725b6a4f32742e2c1958d1ff79e?rik=vlYFBcUWQsZ9Ug&amp;riu=http%3a%2f%2fimg.mm4000.com%2ffile%2f3%2f46%2f0a6b2b7a3b.jpg&amp;ehk=78PwBnfUSRlFeONg5bpceJZZCq5lKCm9CZC%2fD%2bWYVyo%3d&amp;risl=&amp;pid=ImgRaw&amp;r=0" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2023/03/12/Golang/05defer/" title="Golang-defer-05"><img class="cover" src="https://ts1.cn.mm.bing.net/th/id/R-C.61775f76e61f6e79a1b8e49693ef07ed?rik=qXJuUms5Tgjawg&amp;riu=http%3a%2f%2fup.deskcity.org%2fpic_source%2f61%2f77%2f5f%2f61775f76e61f6e79a1b8e49693ef07ed.jpg&amp;ehk=jkcYaZMHlH4EF8Q96caVE87IFt%2bdtY7isFQJ2C4TT4Y%3d&amp;risl=&amp;pid=ImgRaw&amp;r=0" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Golang-defer-05</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2023/03/10/Vue/%E4%BD%BF%E7%94%A8defer%E4%BC%98%E5%8C%96%E7%99%BD%E5%B1%8F%E6%97%B6%E9%97%B4/" title="使用defer优化首屏白屏时间"><img class="cover" src="https://gss0.baidu.com/9fo3dSag_xI4khGko9WTAnF6hhy/zhidao/pic/item/0ff41bd5ad6eddc42b5ad41731dbb6fd53663398.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-03-10</div><div class="title">使用defer优化首屏白屏时间</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://img0.baidu.com/it/u=2045753317,3201031436&amp;fm=253&amp;fmt=auto&amp;app=138&amp;f=JPEG?w=500&amp;h=500" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">magicyan</div><div class="author-info__description">分享一个菜鸡程序员的学习日常</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">11</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">8</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">6</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/magicyan1"><i class="fab fa-github"></i><span>GitHub</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/xxxxx" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:2314741287@qq.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">记录学习路程，每天进步一点点。再坚持坚持就好了</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9E%84%E5%BB%BA%E6%97%B6%E9%97%B4%E4%BC%98%E5%8C%96"><span class="toc-number">1.</span> <span class="toc-text">构建时间优化</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-thread-loader"><span class="toc-number">1.1.</span> <span class="toc-text">(1) thread-loader</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-cache-loader"><span class="toc-number">1.2.</span> <span class="toc-text">(2) cache-loader</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E5%BC%80%E5%90%AF%E7%83%AD%E6%9B%B4%E6%96%B0"><span class="toc-number">1.3.</span> <span class="toc-text">(3) 开启热更新</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-exclude-amp-include"><span class="toc-number">1.4.</span> <span class="toc-text">(4) exclude &amp; include</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E6%9E%84%E5%BB%BA%E5%8C%BA%E5%88%86%E7%8E%AF%E5%A2%83"><span class="toc-number">1.5.</span> <span class="toc-text">(5) 构建区分环境</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-%E6%8F%90%E5%8D%87-webpack-%E7%89%88%E6%9C%AC"><span class="toc-number">1.6.</span> <span class="toc-text">(6) 提升 webpack 版本</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%89%93%E5%8C%85%E4%BD%93%E7%A7%AF%E4%BC%98%E5%8C%96"><span class="toc-number">2.</span> <span class="toc-text">打包体积优化</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-CSS-%E4%BB%A3%E7%A0%81%E5%8E%8B%E7%BC%A9"><span class="toc-number">2.1.</span> <span class="toc-text">(1) CSS 代码压缩</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-JS-%E4%BB%A3%E7%A0%81%E5%8E%8B%E7%BC%A9"><span class="toc-number">2.2.</span> <span class="toc-text">(2) JS 代码压缩</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-tree-shaking"><span class="toc-number">2.3.</span> <span class="toc-text">(3) tree-shaking</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-source-map-%E7%B1%BB%E5%9E%8B"><span class="toc-number">2.4.</span> <span class="toc-text">(4) source-map 类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E6%89%93%E5%8C%85%E4%BD%93%E7%A7%AF%E5%88%86%E6%9E%90"><span class="toc-number">2.5.</span> <span class="toc-text">(5) 打包体积分析</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%94%A8%E6%88%B7%E4%BD%93%E9%AA%8C%E4%BC%98%E5%8C%96"><span class="toc-number">3.</span> <span class="toc-text">用户体验优化</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E6%A8%A1%E5%9D%97%E6%87%92%E5%8A%A0%E8%BD%BD"><span class="toc-number">3.1.</span> <span class="toc-text">(1) 模块懒加载</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-Gzip"><span class="toc-number">3.2.</span> <span class="toc-text">(2) Gzip</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E5%B0%8F%E5%9B%BE%E7%89%87%E8%BD%AC-base64"><span class="toc-number">3.3.</span> <span class="toc-text">(3) 小图片转 base64</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E5%90%88%E7%90%86%E9%85%8D%E7%BD%AE-hash"><span class="toc-number">3.4.</span> <span class="toc-text">(4) 合理配置 hash</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2023/03/12/Webpack/" title="Webpack优化手段"><img src="https://ts1.cn.mm.bing.net/th/id/R-C.ea0d0725b6a4f32742e2c1958d1ff79e?rik=vlYFBcUWQsZ9Ug&amp;riu=http%3a%2f%2fimg.mm4000.com%2ffile%2f3%2f46%2f0a6b2b7a3b.jpg&amp;ehk=78PwBnfUSRlFeONg5bpceJZZCq5lKCm9CZC%2fD%2bWYVyo%3d&amp;risl=&amp;pid=ImgRaw&amp;r=0" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Webpack优化手段"/></a><div class="content"><a class="title" href="/2023/03/12/Webpack/" title="Webpack优化手段">Webpack优化手段</a><time datetime="2023-03-12T14:23:22.000Z" title="发表于 2023-03-12 22:23:22">2023-03-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/03/12/Golang/05defer/" title="Golang-defer-05"><img src="https://ts1.cn.mm.bing.net/th/id/R-C.61775f76e61f6e79a1b8e49693ef07ed?rik=qXJuUms5Tgjawg&amp;riu=http%3a%2f%2fup.deskcity.org%2fpic_source%2f61%2f77%2f5f%2f61775f76e61f6e79a1b8e49693ef07ed.jpg&amp;ehk=jkcYaZMHlH4EF8Q96caVE87IFt%2bdtY7isFQJ2C4TT4Y%3d&amp;risl=&amp;pid=ImgRaw&amp;r=0" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Golang-defer-05"/></a><div class="content"><a class="title" href="/2023/03/12/Golang/05defer/" title="Golang-defer-05">Golang-defer-05</a><time datetime="2023-03-12T13:09:22.000Z" title="发表于 2023-03-12 21:09:22">2023-03-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/03/11/Vue/Vue%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/" title="Vue的生命周期"><img src="https://ts1.cn.mm.bing.net/th/id/R-C.b1123aeb8b8a1e2fa09f0a84d16bb777?rik=a4BY9ObQ0%2fMkIw&amp;riu=http%3a%2f%2fpic.qqbizhi.com%2fallimg%2fbbpic%2f68%2f2868.jpg&amp;ehk=HI8HAvQiJMK%2fUjWbv0R1x7WxD63e7du1SQpCs%2fwPQ5M%3d&amp;risl=&amp;pid=ImgRaw&amp;r=0" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Vue的生命周期"/></a><div class="content"><a class="title" href="/2023/03/11/Vue/Vue%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/" title="Vue的生命周期">Vue的生命周期</a><time datetime="2023-03-11T12:23:22.000Z" title="发表于 2023-03-11 20:23:22">2023-03-11</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/03/11/Golang/04%E5%87%BD%E6%95%B0/" title="Golang-函数-04"><img src="https://ts1.cn.mm.bing.net/th/id/R-C.5ffe442b46cdeceab1dbfa918a39d9a5?rik=rlQT2gTzclkBpQ&amp;riu=http%3a%2f%2fwww.kutoo8.com%2fupload%2fimage%2f88580646%2f20180116004_1440x900.jpg&amp;ehk=rJvPU52RwjQRcbTtraLY%2fnzJGOMLLlOmy3VuRRMZifE%3d&amp;risl=&amp;pid=ImgRaw&amp;r=0" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Golang-函数-04"/></a><div class="content"><a class="title" href="/2023/03/11/Golang/04%E5%87%BD%E6%95%B0/" title="Golang-函数-04">Golang-函数-04</a><time datetime="2023-03-11T08:23:22.000Z" title="发表于 2023-03-11 16:23:22">2023-03-11</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/03/11/Golang/03%E5%B8%B8%E9%87%8F/" title="Golang常量-03"><img src="https://ts1.cn.mm.bing.net/th/id/R-C.16ffd74631cc878b3e9f3c5bf9a11a91?rik=mVh2XgHUIf4Pew&amp;riu=http%3a%2f%2fwww.kutoo8.com%2fupload%2fimage%2f43705686%2f8a4317679c3e755e1a0f88c06b2a236e.jpg&amp;ehk=O5JP1UlOFS5JCneoa5%2byxJ3c1VMyThhHxyWptWRNkHk%3d&amp;risl=&amp;pid=ImgRaw&amp;r=0" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Golang常量-03"/></a><div class="content"><a class="title" href="/2023/03/11/Golang/03%E5%B8%B8%E9%87%8F/" title="Golang常量-03">Golang常量-03</a><time datetime="2023-03-11T07:16:22.000Z" title="发表于 2023-03-11 15:16:22">2023-03-11</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://ts1.cn.mm.bing.net/th/id/R-C.ea0d0725b6a4f32742e2c1958d1ff79e?rik=vlYFBcUWQsZ9Ug&amp;riu=http%3a%2f%2fimg.mm4000.com%2ffile%2f3%2f46%2f0a6b2b7a3b.jpg&amp;ehk=78PwBnfUSRlFeONg5bpceJZZCq5lKCm9CZC%2fD%2bWYVyo%3d&amp;risl=&amp;pid=ImgRaw&amp;r=0')"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By magicyan</div><div class="footer_custom_text">能够在这里遇见你真好</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><div class="js-pjax"></div><div class="aplayer no-destroy" data-id="8152976493" data-server="netease" data-type="playlist"   data-order="list"     data-fixed="true" data-preload="auto" data-autoplay="false" data-mutex="true"></div><canvas class="fireworks" mobile="false"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script defer="defer" id="fluttering_ribbon" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-fluttering-ribbon.min.js"></script><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.8" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="false" data-text="I,LOVE,YOU,Magicyan" data-fontsize="15px" data-random="false" async="async"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof chatBtnFn === 'function' && chatBtnFn()
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","hOffset":50,"width":150,"height":300},"mobile":{"show":true},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/"});</script></body></html>
